@@ -1,0 +1,42 @@
+{% load static %}
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'events/styles.css' %}">
+
+<h1>Search & Filter Events</h1>
+
+<form method="get" class="mb-4">
+    <input type="text" name="q" placeholder="Search title/description" value="{{ query }}">
+    
+    <select name="venue">
+        <option value="">All Venues</option>
+        {% for venue in venues %}
+            <option value="{{ venue.id }}" {% if selected_venue == venue.id|stringformat:"s" %}selected{% endif %}>
+                {{ venue.name }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <input type="date" name="date" value="{{ selected_date }}">
+    <button type="submit">Search</button>
+</form>
+
+<div class="event-list">
+    {% for event in events %}
+        <a href="{% url 'event_detail' event.id %}" class="event-card-link">
+            <div class="event-card">
+                <img src="{% if event.image %}{{ event.image.url }}{% else %}{% static 'events/default.jpg' %}{% endif %}" alt="{{ event.title }}" class="event-image">
+                <h3>{{ event.title }}</h3>
+                <p>{{ event.date|date:"M d, Y" }}, {{ event.time }}</p>
+            </div>
+        </a>
+    {% empty %}
+        <p>No events found.</p>
+    {% endfor %}
+</div>
+
+{% if user.is_authenticated %}
+    <a href="{% url 'create_event' %}">Create New Event</a>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dummy Checkout</title>
+</head>
+<body>
+    <h2>Dummy Payment Page</h2>
+    <p>Event: {{ event.title }}</p>
+    <p>Tickets: {{ tickets }}</p>
+    <p>Total: ₹{{ amount_rupees }}</p>
+
+    <form method="post" action="{% url 'payment_success' %}">
+        {% csrf_token %}
+        <input type="hidden" name="razorpay_order_id" value="{{ order_id }}">
+        <input type="hidden" name="razorpay_payment_id" value="dummy_payment_123">
+        <input type="hidden" name="razorpay_signature" value="dummy_signature_456">
+        <button type="submit">Simulate Successful Payment</button>
+    </form>
+</body>
+</html>
